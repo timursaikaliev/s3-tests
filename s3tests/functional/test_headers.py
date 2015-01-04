@@ -192,6 +192,7 @@ def test_object_create_bad_contentlength_none():
     eq(e.error_code,'MissingContentLength')
 
 
+@attr('fails_on_s3proxy')
 @tag('auth_common')
 @attr(resource='object')
 @attr(method='put')
@@ -236,6 +237,7 @@ def test_object_create_bad_authorization_empty():
 @attr(operation='create w/date and x-amz-date')
 @attr(assertion='succeeds')
 @nose.with_setup(teardown=_clear_custom_headers)
+@attr('fails_on_s3proxy')
 def test_object_create_date_and_amz_date():
     date = formatdate(usegmt=True)
     key = _setup_bad_object({'Date': date, 'X-Amz-Date': date})
@@ -315,6 +317,7 @@ def _create_new_connection():
 @attr(assertion='fails 400')
 @nose.with_setup(teardown=_clear_custom_headers)
 @attr('fails_on_rgw')
+@attr('fails_on_s3proxy')
 def test_bucket_create_bad_contentlength_empty():
     conn = _create_new_connection()
     _add_custom_headers({'Content-Length': ''})

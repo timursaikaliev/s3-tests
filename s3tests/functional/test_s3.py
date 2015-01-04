@@ -153,6 +153,7 @@ def test_versioning_obj_read_not_exist_null():
 @attr(operation='append object')
 @attr(assertion='success')
 @attr('fails_on_aws')
+@attr('fails_on_s3proxy')
 @attr('fails_with_subdomain')
 @attr('appendobject')
 def test_append_object():
@@ -177,6 +178,7 @@ def test_append_object():
 @attr(operation='append to normal object')
 @attr(assertion='fails 409')
 @attr('fails_on_aws')
+@attr('fails_on_s3proxy')
 @attr('fails_with_subdomain')
 @attr('appendobject')
 def test_append_normal_object():
@@ -197,6 +199,7 @@ def test_append_normal_object():
 @attr(operation='append position not right')
 @attr(assertion='fails 409')
 @attr('fails_on_aws')
+@attr('fails_on_s3proxy')
 @attr('fails_with_subdomain')
 @attr('appendobject')
 def test_append_object_position_wrong():
@@ -221,6 +224,7 @@ def test_append_object_position_wrong():
 @attr(operation='set/enable/disable logging target')
 @attr(assertion='operations succeed')
 @attr('fails_on_rgw')
+@attr('fails_on_s3proxy')
 def test_logging_toggle():
     bucket = get_new_bucket()
     log_bucket = get_new_bucket(targets.main.default, bucket.name + '-log')
@@ -849,6 +853,7 @@ def _test_atomic_dual_conditional_write(file_size):
 @attr(operation='write one or the other')
 @attr(assertion='1MB successful')
 @attr('fails_on_aws')
+@attr('fails_on_s3proxy')
 def test_atomic_dual_conditional_write_1mb():
     _test_atomic_dual_conditional_write(1024*1024)
 

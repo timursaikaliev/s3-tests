@@ -694,6 +694,7 @@ def test_bucket_listv2_delimiter_none():
     eq(keys, key_names)
     eq(prefixes, [])
 
+@attr('fails_on_s3proxy')
 @attr('list-objects-v2')
 def test_bucket_listv2_fetchowner_notempty():
     key_names = ['foo/bar', 'foo/baz', 'quux']
@@ -704,6 +705,7 @@ def test_bucket_listv2_fetchowner_notempty():
     objs_list = response['Contents']
     eq('Owner' in objs_list[0], True)
 
+@attr('fails_on_s3proxy')
 @attr('list-objects-v2')
 def test_bucket_listv2_fetchowner_defaultempty():
     key_names = ['foo/bar', 'foo/baz', 'quux']
@@ -714,6 +716,7 @@ def test_bucket_listv2_fetchowner_defaultempty():
     objs_list = response['Contents']
     eq('Owner' in objs_list[0], False)
 
+@attr('fails_on_s3proxy')
 @attr('list-objects-v2')
 def test_bucket_listv2_fetchowner_empty():
     key_names = ['foo/bar', 'foo/baz', 'quux']
@@ -963,6 +966,7 @@ def test_bucket_listv2_prefix_not_exist():
 @attr(method='get')
 @attr(operation='list under prefix')
 @attr(assertion='non-printable prefix can be specified')
+@attr('fails_on_s3proxy')
 def test_bucket_list_prefix_unreadable():
     key_names = ['foo/bar', 'foo/baz', 'quux']
     bucket_name = _create_objects(keys=key_names)
@@ -1273,6 +1277,7 @@ def test_bucket_listv2_maxkeys_none():
 @attr(operation='list all keys')
 @attr(assertion='bucket list unordered')
 @attr('fails_on_aws') # allow-unordered is a non-standard extension
+@attr('fails_on_s3proxy')
 def test_bucket_list_unordered():
     # boto3.set_stream_logger(name='botocore')
     keys_in = ['ado', 'bot', 'cob', 'dog', 'emu', 'fez', 'gnu', 'hex',
@@ -1329,6 +1334,7 @@ def test_bucket_list_unordered():
 @attr(operation='list all keys with list-objects-v2')
 @attr(assertion='bucket list unordered')
 @attr('fails_on_aws') # allow-unordered is a non-standard extension
+@attr('fails_on_s3proxy')
 @attr('list-objects-v2')
 def test_bucket_listv2_unordered():
     # boto3.set_stream_logger(name='botocore')
@@ -1473,6 +1479,7 @@ def test_bucket_listv2_continuationtoken():
 @attr(operation='list keys with list-objects-v2')
 @attr(assertion='no pagination, non-empty continuationtoken and startafter')
 @attr('list-objects-v2')
+@attr('fails_on_s3proxy')
 def test_bucket_listv2_both_continuationtoken_startafter():
     key_names = ['bar', 'baz', 'foo', 'quxx']
     bucket_name = _create_objects(keys=key_names)
@@ -2097,6 +2104,7 @@ def test_object_set_get_metadata_overwrite_to_empty():
 @attr(assertion='UTF-8 values passed through')
 # TODO: the decoding of this unicode metadata is not happening properly for unknown reasons
 @attr('fails_on_rgw')
+@attr('fails_on_s3proxy')
 def test_object_set_get_unicode_metadata():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -2216,6 +2224,7 @@ def _get_post_url(bucket_name):
 @attr(method='post')
 @attr(operation='anonymous browser based upload via POST request')
 @attr(assertion='succeeds and returns written data')
+@attr('fails_on_s3proxy')
 def test_post_object_anonymous_request():
     bucket_name = get_new_bucket_name()
     client = get_client()
@@ -2356,6 +2365,7 @@ def test_post_object_authenticated_request_bad_access_key():
 @attr(method='post')
 @attr(operation='anonymous browser based upload via POST request')
 @attr(assertion='succeeds with status 201')
+@attr('fails_on_s3proxy')
 def test_post_object_set_success_code():
     bucket_name = get_new_bucket_name()
     client = get_client()
@@ -2375,6 +2385,7 @@ def test_post_object_set_success_code():
 @attr(method='post')
 @attr(operation='anonymous browser based upload via POST request')
 @attr(assertion='succeeds with status 204')
+@attr('fails_on_s3proxy')
 def test_post_object_set_invalid_success_code():
     bucket_name = get_new_bucket_name()
     client = get_client()
@@ -2437,6 +2448,7 @@ def test_post_object_upload_larger_than_chunk():
 @attr(method='post')
 @attr(operation='authenticated browser based upload via POST request')
 @attr(assertion='succeeds and returns written data')
+@attr('fails_on_s3proxy')
 def test_post_object_set_key_from_filename():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -2594,6 +2606,7 @@ def test_post_object_escaped_field_values():
 @attr(method='post')
 @attr(operation='authenticated browser based upload via POST request')
 @attr(assertion='succeeds and returns redirect url')
+@attr('fails_on_s3proxy')
 def test_post_object_success_redirect_action():
     bucket_name = get_new_bucket_name()
     client = get_client()
@@ -2715,6 +2728,7 @@ def test_post_object_invalid_access_key():
 @attr(method='post')
 @attr(operation='authenticated browser based upload via POST request')
 @attr(assertion='fails with invalid expiration error')
+@attr('fails_on_s3proxy')
 def test_post_object_invalid_date_format():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -2788,6 +2802,7 @@ def test_post_object_no_key_specified():
 @attr(method='post')
 @attr(operation='authenticated browser based upload via POST request')
 @attr(assertion='fails with missing signature error')
+@attr('fails_on_s3proxy')
 def test_post_object_missing_signature():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -2825,6 +2840,7 @@ def test_post_object_missing_signature():
 @attr(method='post')
 @attr(operation='authenticated browser based upload via POST request')
 @attr(assertion='fails with extra input fields policy error')
+@attr('fails_on_s3proxy')
 def test_post_object_missing_policy_condition():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -2861,6 +2877,7 @@ def test_post_object_missing_policy_condition():
 @attr(method='post')
 @attr(operation='authenticated browser based upload via POST request')
 @attr(assertion='succeeds using starts-with restriction on metadata header')
+@attr('fails_on_s3proxy')
 def test_post_object_user_specified_header():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -2901,6 +2918,7 @@ def test_post_object_user_specified_header():
 @attr(method='post')
 @attr(operation='authenticated browser based upload via POST request')
 @attr(assertion='fails with policy condition failed error due to missing field in POST request')
+@attr('fails_on_s3proxy')
 def test_post_object_request_missing_policy_specified_field():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -2939,6 +2957,7 @@ def test_post_object_request_missing_policy_specified_field():
 @attr(method='post')
 @attr(operation='authenticated browser based upload via POST request')
 @attr(assertion='fails with conditions must be list error')
+@attr('fails_on_s3proxy')
 def test_post_object_condition_is_case_sensitive():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -2976,6 +2995,7 @@ def test_post_object_condition_is_case_sensitive():
 @attr(method='post')
 @attr(operation='authenticated browser based upload via POST request')
 @attr(assertion='fails with expiration must be string error')
+@attr('fails_on_s3proxy')
 def test_post_object_expires_is_case_sensitive():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -3013,6 +3033,7 @@ def test_post_object_expires_is_case_sensitive():
 @attr(method='post')
 @attr(operation='authenticated browser based upload via POST request')
 @attr(assertion='fails with policy expired error')
+@attr('fails_on_s3proxy')
 def test_post_object_expired_policy():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -3050,6 +3071,7 @@ def test_post_object_expired_policy():
 @attr(method='post')
 @attr(operation='authenticated browser based upload via POST request')
 @attr(assertion='fails using equality restriction on metadata header')
+@attr('fails_on_s3proxy')
 def test_post_object_invalid_request_field_value():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -3087,6 +3109,7 @@ def test_post_object_invalid_request_field_value():
 @attr(method='post')
 @attr(operation='authenticated browser based upload via POST request')
 @attr(assertion='fails with policy missing expiration error')
+@attr('fails_on_s3proxy')
 def test_post_object_missing_expires_condition():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -3124,6 +3147,7 @@ def test_post_object_missing_expires_condition():
 @attr(method='post')
 @attr(operation='authenticated browser based upload via POST request')
 @attr(assertion='fails with policy missing conditions error')
+@attr('fails_on_s3proxy')
 def test_post_object_missing_conditions_list():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -3153,6 +3177,7 @@ def test_post_object_missing_conditions_list():
 @attr(method='post')
 @attr(operation='authenticated browser based upload via POST request')
 @attr(assertion='fails with allowable upload size exceeded error')
+@attr('fails_on_s3proxy')
 def test_post_object_upload_size_limit_exceeded():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -3190,6 +3215,7 @@ def test_post_object_upload_size_limit_exceeded():
 @attr(method='post')
 @attr(operation='authenticated browser based upload via POST request')
 @attr(assertion='fails with invalid content length error')
+@attr('fails_on_s3proxy')
 def test_post_object_missing_content_length_argument():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -3227,6 +3253,7 @@ def test_post_object_missing_content_length_argument():
 @attr(method='post')
 @attr(operation='authenticated browser based upload via POST request')
 @attr(assertion='fails with invalid JSON error')
+@attr('fails_on_s3proxy')
 def test_post_object_invalid_content_length_argument():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -3264,6 +3291,7 @@ def test_post_object_invalid_content_length_argument():
 @attr(method='post')
 @attr(operation='authenticated browser based upload via POST request')
 @attr(assertion='fails with upload size less than minimum allowable error')
+@attr('fails_on_s3proxy')
 def test_post_object_upload_size_below_minimum():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -3301,6 +3329,7 @@ def test_post_object_upload_size_below_minimum():
 @attr(method='post')
 @attr(operation='authenticated browser based upload via POST request')
 @attr(assertion='empty conditions return appropriate error response')
+@attr('fails_on_s3proxy')
 def test_post_object_empty_conditions():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -3423,6 +3452,7 @@ def test_get_object_ifmodifiedsince_failed():
     eq(status, 304)
     eq(e.response['Error']['Message'], 'Not Modified')
 
+@attr('fails_on_s3proxy')
 @attr(resource='object')
 @attr(method='get')
 @attr(operation='get w/ If-Unmodified-Since: before')
@@ -3480,6 +3510,7 @@ def test_put_object_ifmatch_good():
 @attr(method='get')
 @attr(operation='get w/ If-Match: bogus ETag')
 @attr(assertion='fails 412')
+@attr('fails_on_s3proxy')
 def test_put_object_ifmatch_failed():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -3527,6 +3558,7 @@ def test_put_object_ifmatch_overwrite_existed_good():
 @attr(operation='overwrite non-existing object w/ If-Match: *')
 @attr(assertion='fails 412')
 @attr('fails_on_aws')
+@attr('fails_on_s3proxy')
 def test_put_object_ifmatch_nonexisted_failed():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -3569,6 +3601,7 @@ def test_put_object_ifnonmatch_good():
 @attr(operation='overwrite existing object w/ If-None-Match: the latest ETag')
 @attr(assertion='fails 412')
 @attr('fails_on_aws')
+@attr('fails_on_s3proxy')
 def test_put_object_ifnonmatch_failed():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -3614,6 +3647,7 @@ def test_put_object_ifnonmatch_nonexisted_good():
 @attr(operation='overwrite existing object w/ If-None-Match: *')
 @attr(assertion='fails 412')
 @attr('fails_on_aws')
+@attr('fails_on_s3proxy')
 def test_put_object_ifnonmatch_overwrite_existed_failed():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -3690,6 +3724,7 @@ def test_object_raw_get_bucket_gone():
 @attr(method='get')
 @attr(operation='deleted object and bucket')
 @attr(assertion='fails 404')
+@attr('fails_on_s3proxy')
 def test_object_delete_key_bucket_gone():
     bucket_name = _setup_bucket_object_acl('public-read', 'public-read')
     client = get_client()
@@ -3701,6 +3736,7 @@ def test_object_delete_key_bucket_gone():
 
     e = assert_raises(ClientError, unauthenticated_client.delete_object, Bucket=bucket_name, Key='foo')
     status, error_code = _get_status_and_error_code(e.response)
+    # TODO: S3Proxy returns 403 here
     eq(status, 404)
     eq(error_code, 'NoSuchBucket')
 
@@ -3733,6 +3769,7 @@ def test_bucket_head():
     eq(response['ResponseMetadata']['HTTPStatusCode'], 200)
 
 @attr('fails_on_aws')
+@attr('fails_on_s3proxy')
 @attr(resource='bucket')
 @attr(method='head')
 @attr(operation='read bucket extended information')
@@ -3934,6 +3971,7 @@ def test_object_anon_put():
 @attr(method='put')
 @attr(operation='unauthenticated, publically writable object')
 @attr(assertion='succeeds')
+@attr('fails_on_s3proxy')
 def test_object_anon_put_write_access():
     bucket_name = _setup_bucket_acl('public-read-write')
     client = get_client()
@@ -4020,6 +4058,7 @@ def check_invalid_bucketname(invalid_name):
 @attr(assertion='fails 405')
 # TODO: remove this fails_on_rgw when I fix it
 @attr('fails_on_rgw')
+@attr('fails_on_s3proxy')
 def test_bucket_create_naming_bad_short_empty():
     invalid_bucketname = ''
     status, error_code = check_invalid_bucketname(invalid_bucketname)
@@ -4048,6 +4087,7 @@ def test_bucket_create_naming_bad_short_two():
 @attr(assertion='fails with subdomain: 400')
 # TODO: remove this fails_on_rgw when I fix it
 @attr('fails_on_rgw')
+@attr('fails_on_s3proxy')
 def test_bucket_create_naming_bad_long():
     invalid_bucketname = 256*'a'
     status, error_code = check_invalid_bucketname(invalid_bucketname)
@@ -4191,6 +4231,7 @@ def test_bucket_create_naming_bad_ip():
 @attr(assertion='fails with subdomain')
 # TODO: remove this fails_on_rgw when I fix it
 @attr('fails_on_rgw')
+@attr('fails_on_s3proxy')
 def test_bucket_create_naming_bad_punctuation():
     # characters other than [a-zA-Z0-9._-]
     invalid_bucketname = 'alpha!soup'
@@ -4206,6 +4247,7 @@ def test_bucket_create_naming_bad_punctuation():
 @attr(assertion='fails')
 @attr('fails_on_aws') # <Error><Code>InvalidBucketName</Code><Message>The specified bucket is not valid.</Message>...</Error>
 # Should now pass on AWS even though it has 'fails_on_aws' attr.
+@attr('fails_on_s3proxy')
 def test_bucket_create_naming_dns_underscore():
     invalid_bucketname = 'foo_bar'
     status, error_code = check_invalid_bucketname(invalid_bucketname)
@@ -4233,6 +4275,7 @@ def test_bucket_create_naming_dns_long():
 @attr(assertion='fails')
 @attr('fails_on_aws') # <Error><Code>InvalidBucketName</Code><Message>The specified bucket is not valid.</Message>...</Error>
 # Should now pass on AWS even though it has 'fails_on_aws' attr.
+@attr('fails_on_s3proxy')
 def test_bucket_create_naming_dns_dash_at_end():
     invalid_bucketname = 'foo-'
     status, error_code = check_invalid_bucketname(invalid_bucketname)
@@ -4248,6 +4291,7 @@ def test_bucket_create_naming_dns_dash_at_end():
 @attr(assertion='fails')
 @attr('fails_on_aws') # <Error><Code>InvalidBucketName</Code><Message>The specified bucket is not valid.</Message>...</Error>
 # Should now pass on AWS even though it has 'fails_on_aws' attr.
+@attr('fails_on_s3proxy')
 def test_bucket_create_naming_dns_dot_dot():
     invalid_bucketname = 'foo..bar'
     status, error_code = check_invalid_bucketname(invalid_bucketname)
@@ -4263,6 +4307,7 @@ def test_bucket_create_naming_dns_dot_dot():
 @attr(assertion='fails')
 @attr('fails_on_aws') # <Error><Code>InvalidBucketName</Code><Message>The specified bucket is not valid.</Message>...</Error>
 # Should now pass on AWS even though it has 'fails_on_aws' attr.
+@attr('fails_on_s3proxy')
 def test_bucket_create_naming_dns_dot_dash():
     invalid_bucketname = 'foo.-bar'
     status, error_code = check_invalid_bucketname(invalid_bucketname)
@@ -4278,12 +4323,14 @@ def test_bucket_create_naming_dns_dot_dash():
 @attr(assertion='fails')
 @attr('fails_on_aws') # <Error><Code>InvalidBucketName</Code><Message>The specified bucket is not valid.</Message>...</Error>
 # Should now pass on AWS even though it has 'fails_on_aws' attr.
+@attr('fails_on_s3proxy')
 def test_bucket_create_naming_dns_dash_dot():
     invalid_bucketname = 'foo-.bar'
     status, error_code = check_invalid_bucketname(invalid_bucketname)
     eq(status, 400)
     eq(error_code, 'InvalidBucketName')
 
+@attr('fails_on_s3proxy')
 @attr(resource='bucket')
 @attr(method='put')
 @attr(operation='re-create')
@@ -4322,6 +4369,7 @@ def test_bucket_get_location():
 @attr(method='put')
 @attr(operation='re-create by non-owner')
 @attr(assertion='fails 409')
+@attr('fails_on_s3proxy')
 def test_bucket_create_exists_nonowner():
     # Names are shared across a global namespace. As such, no two
     # users can create a bucket with that same name.
@@ -4358,6 +4406,7 @@ def check_grants(got, want):
         eq(g['Grantee'].pop('EmailAddress', None), w['EmailAddress'])
         eq(g, {'Grantee': {}})
 
+@attr('fails_on_s3proxy')
 @attr(resource='bucket')
 @attr(method='get')
 @attr(operation='default acl')
@@ -4394,6 +4443,7 @@ def test_bucket_acl_default():
 @attr(operation='public-read acl')
 @attr(assertion='read back expected defaults')
 @attr('fails_on_aws') # <Error><Code>IllegalLocationConstraintException</Code><Message>The unspecified location constraint is incompatible for the region specific endpoint this request was sent to.</Message>
+@attr('fails_on_s3proxy')
 def test_bucket_acl_canned_during_create():
     bucket_name = get_new_bucket_name()
     client = get_client()
@@ -4426,6 +4476,7 @@ def test_bucket_acl_canned_during_create():
             ],
         )
 
+@attr('fails_on_s3proxy')
 @attr(resource='bucket')
 @attr(method='put')
 @attr(operation='acl: public-read,private')
@@ -4484,6 +4535,7 @@ def test_bucket_acl_canned():
 @attr(method='put')
 @attr(operation='acl: public-read-write')
 @attr(assertion='read back expected values')
+@attr('fails_on_s3proxy')
 def test_bucket_acl_canned_publicreadwrite():
     bucket_name = get_new_bucket_name()
     client = get_client()
@@ -4527,6 +4579,7 @@ def test_bucket_acl_canned_publicreadwrite():
 @attr(method='put')
 @attr(operation='acl: authenticated-read')
 @attr(assertion='read back expected values')
+@attr('fails_on_s3proxy')
 def test_bucket_acl_canned_authenticatedread():
     bucket_name = get_new_bucket_name()
     client = get_client()
@@ -4563,6 +4616,7 @@ def test_bucket_acl_canned_authenticatedread():
 @attr(method='get')
 @attr(operation='default acl')
 @attr(assertion='read back expected defaults')
+@attr('fails_on_s3proxy')
 def test_object_acl_default():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -4593,6 +4647,7 @@ def test_object_acl_default():
 @attr(method='put')
 @attr(operation='acl public-read')
 @attr(assertion='read back expected values')
+@attr('fails_on_s3proxy')
 def test_object_acl_canned_during_create():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -4631,6 +4686,7 @@ def test_object_acl_canned_during_create():
 @attr(method='put')
 @attr(operation='acl public-read,private')
 @attr(assertion='read back expected values')
+@attr('fails_on_s3proxy')
 def test_object_acl_canned():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -4688,6 +4744,7 @@ def test_object_acl_canned():
 @attr(method='put')
 @attr(operation='acl public-read-write')
 @attr(assertion='read back expected values')
+@attr('fails_on_s3proxy')
 def test_object_acl_canned_publicreadwrite():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -4733,6 +4790,7 @@ def test_object_acl_canned_publicreadwrite():
 @attr(method='put')
 @attr(operation='acl authenticated-read')
 @attr(assertion='read back expected values')
+@attr('fails_on_s3proxy')
 def test_object_acl_canned_authenticatedread():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -4770,6 +4828,7 @@ def test_object_acl_canned_authenticatedread():
 @attr(method='put')
 @attr(operation='acl bucket-owner-read')
 @attr(assertion='read back expected values')
+@attr('fails_on_s3proxy')
 def test_object_acl_canned_bucketownerread():
     bucket_name = get_new_bucket_name()
     main_client = get_client()
@@ -4816,6 +4875,7 @@ def test_object_acl_canned_bucketownerread():
 @attr(method='put')
 @attr(operation='acl bucket-owner-read')
 @attr(assertion='read back expected values')
+@attr('fails_on_s3proxy')
 def test_object_acl_canned_bucketownerfullcontrol():
     bucket_name = get_new_bucket_name()
     main_client = get_client()
@@ -4863,6 +4923,7 @@ def test_object_acl_canned_bucketownerfullcontrol():
 @attr(operation='set write-acp')
 @attr(assertion='does not modify owner')
 @attr('fails_on_aws') #  <Error><Code>InvalidArgument</Code><Message>Invalid id</Message><ArgumentName>CanonicalUser/ID</ArgumentName><ArgumentValue>${ALTUSER}</ArgumentValue>
+@attr('fails_on_s3proxy')
 def test_object_acl_full_control_verify_owner():
     bucket_name = get_new_bucket_name()
     main_client = get_client()
@@ -4915,6 +4976,7 @@ def add_obj_user_grant(bucket_name, key, grant):
 @attr(method='put')
 @attr(operation='set write-acp')
 @attr(assertion='does not modify other attributes')
+@attr('fails_on_s3proxy')
 def test_object_acl_full_control_verify_attributes():
     bucket_name = get_new_bucket_name()
     main_client = get_client()
@@ -5022,6 +5084,7 @@ def _check_object_acl(permission):
 @attr(operation='set acl FULL_CONTRO')
 @attr(assertion='reads back correctly')
 @attr('fails_on_aws') #  <Error><Code>InvalidArgument</Code><Message>Invalid id</Message><ArgumentName>CanonicalUser/ID</ArgumentName><ArgumentValue>${USER}</ArgumentValue>
+@attr('fails_on_s3proxy')
 def test_object_acl():
     _check_object_acl('FULL_CONTROL')
 
@@ -5030,6 +5093,7 @@ def test_object_acl():
 @attr(operation='set acl WRITE')
 @attr(assertion='reads back correctly')
 @attr('fails_on_aws') #  <Error><Code>InvalidArgument</Code><Message>Invalid id</Message><ArgumentName>CanonicalUser/ID</ArgumentName><ArgumentValue>${USER}</ArgumentValue>
+@attr('fails_on_s3proxy')
 def test_object_acl_write():
     _check_object_acl('WRITE')
 
@@ -5038,6 +5102,7 @@ def test_object_acl_write():
 @attr(operation='set acl WRITE_ACP')
 @attr(assertion='reads back correctly')
 @attr('fails_on_aws') #  <Error><Code>InvalidArgument</Code><Message>Invalid id</Message><ArgumentName>CanonicalUser/ID</ArgumentName><ArgumentValue>${USER}</ArgumentValue>
+@attr('fails_on_s3proxy')
 def test_object_acl_writeacp():
     _check_object_acl('WRITE_ACP')
 
@@ -5047,6 +5112,7 @@ def test_object_acl_writeacp():
 @attr(operation='set acl READ')
 @attr(assertion='reads back correctly')
 @attr('fails_on_aws') #  <Error><Code>InvalidArgument</Code><Message>Invalid id</Message><ArgumentName>CanonicalUser/ID</ArgumentName><ArgumentValue>${USER}</ArgumentValue>
+@attr('fails_on_s3proxy')
 def test_object_acl_read():
     _check_object_acl('READ')
 
@@ -5056,6 +5122,7 @@ def test_object_acl_read():
 @attr(operation='set acl READ_ACP')
 @attr(assertion='reads back correctly')
 @attr('fails_on_aws') #  <Error><Code>InvalidArgument</Code><Message>Invalid id</Message><ArgumentName>CanonicalUser/ID</ArgumentName><ArgumentValue>${USER}</ArgumentValue>
+@attr('fails_on_s3proxy')
 def test_object_acl_readacp():
     _check_object_acl('READ_ACP')
 
@@ -5169,6 +5236,7 @@ def _check_bucket_acl_grant_cant_writeacp(bucket_name):
 @attr(operation='set acl w/userid FULL_CONTROL')
 @attr(assertion='can read/write data/acls')
 @attr('fails_on_aws') #  <Error><Code>InvalidArgument</Code><Message>Invalid id</Message><ArgumentName>CanonicalUser/ID</ArgumentName><ArgumentValue>${USER}</ArgumentValue>
+@attr('fails_on_s3proxy')
 def test_bucket_acl_grant_userid_fullcontrol():
     bucket_name = _bucket_acl_grant_userid('FULL_CONTROL')
 
@@ -5198,6 +5266,7 @@ def test_bucket_acl_grant_userid_fullcontrol():
 @attr(operation='set acl w/userid READ')
 @attr(assertion='can read data, no other r/w')
 @attr('fails_on_aws') #  <Error><Code>InvalidArgument</Code><Message>Invalid id</Message><ArgumentName>CanonicalUser/ID</ArgumentName><ArgumentValue>${ALTUSER}</ArgumentValue>
+@attr('fails_on_s3proxy')
 def test_bucket_acl_grant_userid_read():
     bucket_name = _bucket_acl_grant_userid('READ')
 
@@ -5215,6 +5284,7 @@ def test_bucket_acl_grant_userid_read():
 @attr(operation='set acl w/userid READ_ACP')
 @attr(assertion='can read acl, no other r/w')
 @attr('fails_on_aws') #  <Error><Code>InvalidArgument</Code><Message>Invalid id</Message><ArgumentName>CanonicalUser/ID</ArgumentName><ArgumentValue>${ALTUSER}</ArgumentValue>
+@attr('fails_on_s3proxy')
 def test_bucket_acl_grant_userid_readacp():
     bucket_name = _bucket_acl_grant_userid('READ_ACP')
 
@@ -5233,6 +5303,7 @@ def test_bucket_acl_grant_userid_readacp():
 @attr(operation='set acl w/userid WRITE')
 @attr(assertion='can write data, no other r/w')
 @attr('fails_on_aws') #  <Error><Code>InvalidArgument</Code><Message>Invalid id</Message><ArgumentName>CanonicalUser/ID</ArgumentName><ArgumentValue>${ALTUSER}</ArgumentValue>
+@attr('fails_on_s3proxy')
 def test_bucket_acl_grant_userid_write():
     bucket_name = _bucket_acl_grant_userid('WRITE')
 
@@ -5250,6 +5321,7 @@ def test_bucket_acl_grant_userid_write():
 @attr(operation='set acl w/userid WRITE_ACP')
 @attr(assertion='can write acls, no other r/w')
 @attr('fails_on_aws') #  <Error><Code>InvalidArgument</Code><Message>Invalid id</Message><ArgumentName>CanonicalUser/ID</ArgumentName><ArgumentValue>${ALTUSER}</ArgumentValue>
+@attr('fails_on_s3proxy')
 def test_bucket_acl_grant_userid_writeacp():
     bucket_name = _bucket_acl_grant_userid('WRITE_ACP')
 
@@ -5266,6 +5338,7 @@ def test_bucket_acl_grant_userid_writeacp():
 @attr(method='ACLs')
 @attr(operation='set acl w/invalid userid')
 @attr(assertion='fails 400')
+@attr('fails_on_s3proxy')
 def test_bucket_acl_grant_nonexist_user():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -5286,6 +5359,7 @@ def test_bucket_acl_grant_nonexist_user():
 @attr(method='ACLs')
 @attr(operation='revoke all ACLs')
 @attr(assertion='can: read obj, get/set bucket acl, cannot write objs')
+@attr('fails_on_s3proxy')
 def test_bucket_acl_no_grants():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -5345,6 +5419,7 @@ def _get_acl_header(user_id=None, perms=None):
 @attr(assertion='adds all grants individually to second user')
 @attr('fails_on_dho')
 @attr('fails_on_aws') #  <Error><Code>InvalidArgument</Code><Message>Invalid id</Message><ArgumentName>CanonicalUser/ID</ArgumentName><ArgumentValue>${ALTUSER}</ArgumentValue>
+@attr('fails_on_s3proxy')
 def test_object_header_acl_grants():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -5417,6 +5492,7 @@ def test_object_header_acl_grants():
 @attr(assertion='adds all grants individually to second user')
 @attr('fails_on_dho')
 @attr('fails_on_aws') #  <Error><Code>InvalidArgument</Code><Message>Invalid id</Message><ArgumentName>CanonicalUser/ID</ArgumentName><ArgumentValue>${ALTUSER}</ArgumentValue>
+@attr('fails_on_s3proxy')
 def test_bucket_header_acl_grants():
     headers = _get_acl_header()
     bucket_name = get_new_bucket_name()
@@ -5500,6 +5576,7 @@ def test_bucket_header_acl_grants():
 @attr(operation='add second FULL_CONTROL user')
 @attr(assertion='works for S3, fails for DHO')
 @attr('fails_on_aws') #  <Error><Code>AmbiguousGrantByEmailAddress</Code><Message>The e-mail address you provided is associated with more than one account. Please retry your request using a different identification method or after resolving the ambiguity.</Message>
+@attr('fails_on_s3proxy')
 def test_bucket_acl_grant_email():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -5546,6 +5623,7 @@ def test_bucket_acl_grant_email():
 @attr(method='ACLs')
 @attr(operation='add acl for nonexistent user')
 @attr(assertion='fail 400')
+@attr('fails_on_s3proxy')
 def test_bucket_acl_grant_email_not_exist():
     # behavior not documented by amazon
     bucket_name = get_new_bucket()
@@ -5569,6 +5647,7 @@ def test_bucket_acl_grant_email_not_exist():
 @attr(method='ACLs')
 @attr(operation='revoke all ACLs')
 @attr(assertion='acls read back as empty')
+@attr('fails_on_s3proxy')
 def test_bucket_acl_revoke_all():
     # revoke all access, including the owner's access
     bucket_name = get_new_bucket()
@@ -5600,6 +5679,7 @@ def test_bucket_acl_revoke_all():
 @attr(operation='set/enable/disable logging target')
 @attr(assertion='operations succeed')
 @attr('fails_on_rgw')
+@attr('fails_on_s3proxy')
 def test_logging_toggle():
     bucket_name = get_new_bucket()
     client = get_client()
@@ -5641,6 +5721,7 @@ def get_bucket_key_names(bucket_name):
     objs_list = get_objects_list(bucket_name)
     return frozenset(obj for obj in objs_list)
 
+@attr('fails_on_s3proxy')
 @attr(resource='object')
 @attr(method='ACLs')
 @attr(operation='set bucket/object acls: private/private')
@@ -5672,6 +5753,7 @@ def test_access_bucket_private_object_private():
     alt_client3 = get_alt_client()
     check_access_denied(alt_client3.put_object, Bucket=bucket_name, Key=newkey, Body='newcontent')
 
+@attr('fails_on_s3proxy')
 @attr(resource='object')
 @attr(method='ACLs')
 @attr(operation='set bucket/object acls: private/private with list-objects-v2')
@@ -5708,6 +5790,7 @@ def test_access_bucket_private_objectv2_private():
 @attr(method='ACLs')
 @attr(operation='set bucket/object acls: private/public-read')
 @attr(assertion='public can only read readable object')
+@attr('fails_on_s3proxy')
 def test_access_bucket_private_object_publicread():
 
     bucket_name, key1, key2, newkey = _setup_access(bucket_acl='private', object_acl='public-read')
@@ -5732,6 +5815,7 @@ def test_access_bucket_private_object_publicread():
 @attr(method='ACLs')
 @attr(operation='set bucket/object acls: private/public-read with list-objects-v2')
 @attr(assertion='public can only read readable object')
+@attr('fails_on_s3proxy')
 @attr('list-objects-v2')
 def test_access_bucket_private_objectv2_publicread():
 
@@ -5757,6 +5841,7 @@ def test_access_bucket_private_objectv2_publicread():
 @attr(method='ACLs')
 @attr(operation='set bucket/object acls: private/public-read/write')
 @attr(assertion='public can only read the readable object')
+@attr('fails_on_s3proxy')
 def test_access_bucket_private_object_publicreadwrite():
     bucket_name, key1, key2, newkey = _setup_access(bucket_acl='private', object_acl='public-read-write')
     alt_client = get_alt_client()
@@ -5777,6 +5862,7 @@ def test_access_bucket_private_object_publicreadwrite():
     check_access_denied(alt_client3.list_objects, Bucket=bucket_name)
     check_access_denied(alt_client3.put_object, Bucket=bucket_name, Key=newkey, Body='newcontent')
 
+@attr('fails_on_s3proxy')
 @attr(resource='object')
 @attr(method='ACLs')
 @attr(operation='set bucket/object acls: private/public-read/write with list-objects-v2')
@@ -5806,6 +5892,7 @@ def test_access_bucket_private_objectv2_publicreadwrite():
 @attr(method='ACLs')
 @attr(operation='set bucket/object acls: public-read/private')
 @attr(assertion='public can only list the bucket')
+@attr('fails_on_s3proxy')
 def test_access_bucket_publicread_object_private():
     bucket_name, key1, key2, newkey = _setup_access(bucket_acl='public-read', object_acl='private')
     alt_client = get_alt_client()
@@ -5825,6 +5912,7 @@ def test_access_bucket_publicread_object_private():
     eq(objs, ['bar', 'foo'])
     check_access_denied(alt_client3.put_object, Bucket=bucket_name, Key=newkey, Body='newcontent')
 
+@attr('fails_on_s3proxy')
 @attr(resource='object')
 @attr(method='ACLs')
 @attr(operation='set bucket/object acls: public-read/public-read')
@@ -5857,6 +5945,7 @@ def test_access_bucket_publicread_object_publicread():
 @attr(method='ACLs')
 @attr(operation='set bucket/object acls: public-read/public-read-write')
 @attr(assertion='public can read readable objects and list bucket')
+@attr('fails_on_s3proxy')
 def test_access_bucket_publicread_object_publicreadwrite():
     bucket_name, key1, key2, newkey = _setup_access(bucket_acl='public-read', object_acl='public-read-write')
     alt_client = get_alt_client()
@@ -5887,6 +5976,7 @@ def test_access_bucket_publicread_object_publicreadwrite():
 @attr(method='ACLs')
 @attr(operation='set bucket/object acls: public-read-write/private')
 @attr(assertion='private objects cannot be read, but can be overwritten')
+@attr('fails_on_s3proxy')
 def test_access_bucket_publicreadwrite_object_private():
     bucket_name, key1, key2, newkey = _setup_access(bucket_acl='public-read-write', object_acl='private')
     alt_client = get_alt_client()
@@ -5906,6 +5996,7 @@ def test_access_bucket_publicreadwrite_object_private():
 @attr(method='ACLs')
 @attr(operation='set bucket/object acls: public-read-write/public-read')
 @attr(assertion='private objects cannot be read, but can be overwritten')
+@attr('fails_on_s3proxy')
 def test_access_bucket_publicreadwrite_object_publicread():
     bucket_name, key1, key2, newkey = _setup_access(bucket_acl='public-read-write', object_acl='public-read')
     alt_client = get_alt_client()
@@ -5928,6 +6019,7 @@ def test_access_bucket_publicreadwrite_object_publicread():
 @attr(method='ACLs')
 @attr(operation='set bucket/object acls: public-read-write/public-read-write')
 @attr(assertion='private objects cannot be read, but can be overwritten')
+@attr('fails_on_s3proxy')
 def test_access_bucket_publicreadwrite_object_publicreadwrite():
     bucket_name, key1, key2, newkey = _setup_access(bucket_acl='public-read-write', object_acl='public-read-write')
     alt_client = get_alt_client()
@@ -5972,6 +6064,7 @@ def test_buckets_create_then_list():
 @attr(operation='list all buckets (anonymous)')
 @attr(assertion='succeeds')
 @attr('fails_on_aws')
+@attr('fails_on_s3proxy')
 def test_list_buckets_anonymous():
     # Get a connection with bad authorization, then change it to be our new Anonymous auth mechanism,
     # emulating standard HTTP access.
@@ -6044,23 +6137,6 @@ def test_bucket_create_naming_good_contains_period():
 @attr(assertion='name containing hyphen works')
 def test_bucket_create_naming_good_contains_hyphen():
     check_good_bucket_name('aaa-111')
-
-@attr(resource='bucket')
-@attr(method='put')
-@attr(operation='create bucket with objects and recreate it')
-@attr(assertion='bucket recreation not overriding index')
-def test_bucket_recreate_not_overriding():
-    key_names = ['mykey1', 'mykey2']
-    bucket_name = _create_objects(keys=key_names)
-
-    objs_list = get_objects_list(bucket_name)
-    eq(key_names, objs_list)
-
-    client = get_client()
-    client.create_bucket(Bucket=bucket_name)
-
-    objs_list = get_objects_list(bucket_name)
-    eq(key_names, objs_list)
 
 @attr(resource='object')
 @attr(method='put')
@@ -6220,6 +6296,7 @@ def test_object_copy_diff_bucket():
 @attr(method='put')
 @attr(operation='copy to an inaccessible bucket')
 @attr(assertion='fails w/AttributeError')
+@attr('fails_on_s3proxy')
 def test_object_copy_not_owned_bucket():
     client = get_client()
     alt_client = get_alt_client()
@@ -6240,6 +6317,7 @@ def test_object_copy_not_owned_bucket():
 @attr(method='put')
 @attr(operation='copy a non-owned object in a non-owned bucket, but with perms')
 @attr(assertion='works')
+@attr('fails_on_s3proxy')
 def test_object_copy_not_owned_object_bucket():
     client = get_client()
     alt_client = get_alt_client()
@@ -7000,6 +7078,7 @@ def test_multipart_copy_multiple_sizes():
 @attr(method='put')
 @attr(operation='check failure on multiple multi-part upload with size too small')
 @attr(assertion='fails 400')
+@attr('fails_on_s3proxy')
 def test_multipart_upload_size_too_small():
     bucket_name = get_new_bucket()
     key="mymultipart"
@@ -7235,6 +7314,7 @@ def _simple_http_req_100_cont(host, port, is_secure, method, resource):
 @attr(assertion='succeeds if object is public-read-write')
 @attr('100_continue')
 @attr('fails_on_mod_proxy_fcgi')
+@attr('fails_on_s3proxy')
 def test_100_continue():
     bucket_name = get_new_bucket_name()
     client = get_client()
@@ -7783,6 +7863,7 @@ def _test_atomic_dual_conditional_write(file_size):
 @attr('fails_on_aws')
 # TODO: test not passing with SSL, fix this
 @attr('fails_on_rgw')
+@attr('fails_on_s3proxy')
 def test_atomic_dual_conditional_write_1mb():
     _test_atomic_dual_conditional_write(1024*1024)
 
@@ -12367,6 +12448,7 @@ def test_copy_object_ifnonematch_failed():
 @attr(assertion='fails 400')
 # TODO: results in a 404 instead of 400 on the RGW
 @attr('fails_on_rgw')
+@attr('fails_on_s3proxy')
 def test_object_read_unreadable():
     bucket_name = get_new_bucket()
     client = get_client()

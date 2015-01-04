@@ -77,7 +77,7 @@ def get_objects_list(bucket, client=None, prefix=None):
 def get_versioned_objects_list(bucket, client=None):
     if client == None:
         client = get_client()
-    response = client.list_object_versions(Bucket=bucket)
+    response = client.list_objects(Bucket=bucket)
     versioned_objects_list = []
 
     if 'Versions' in response:
@@ -93,7 +93,7 @@ def get_versioned_objects_list(bucket, client=None):
 def get_delete_markers_list(bucket, client=None):
     if client == None:
         client = get_client()
-    response = client.list_object_versions(Bucket=bucket)
+    response = client.list_objects(Bucket=bucket)
     delete_markers = []
 
     if 'DeleteMarkers' in response:

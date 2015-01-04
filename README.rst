@@ -54,3 +54,7 @@ You can run only the boto3 tests with::
 
         S3TEST_CONF=your.conf ./virtualenv/bin/nosetests -v -s -A 'not fails_on_rgw' s3tests_boto3.functional
 
+S3Proxy instructions::
+
+	S3TEST_CONF=s3proxy.conf ./virtualenv/bin/nosetests -a '!fails_on_s3proxy,!bucket-policy,!cors,!encryption,!fails_strict_rfc2616,!lifecycle,!object-lock,!policy,!s3website,!tagging,!versioning'
+
