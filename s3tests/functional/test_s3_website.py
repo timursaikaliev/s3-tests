@@ -278,7 +278,6 @@ def test_website_nonexistant_bucket_rgw():
 @attr(assertion='non-empty public buckets via s3website return page for /, where page is public')
 @attr('s3website')
 @nose.with_setup(setup=check_can_test_website, teardown=common.teardown)
-@timed(10)
 def test_website_public_bucket_list_public_index():
     bucket = get_new_bucket()
     f = _test_website_prep(bucket, WEBSITE_CONFIGS_XMLFRAG['IndexDoc'])
