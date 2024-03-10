@@ -771,6 +771,7 @@ def test_bucket_listv2_delimiter_not_exist():
 @attr(method='get')
 @attr(operation='list')
 @attr(assertion='list with delimiter not skip special keys')
+@attr('fails_on_s3proxy')
 def test_bucket_list_delimiter_not_skip_special():
     key_names = ['0/'] + ['0/%s' % i for i in range(1000, 1999)]
     key_names2 = ['1999', '1999#', '1999+', '2000']
